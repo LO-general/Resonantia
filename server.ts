@@ -60,6 +60,10 @@ app.use((req, _res, next) => {
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ extended: true, limit: '100mb' }));
 
+app.get(['/api/health', '/api/index'], (_req, res) => {
+  res.json({ ok: true, app: 'Resonantia', serverless: IS_VERCEL });
+});
+
 // Security headers (allow iframe embedding for AI Studio preview; anti-MIME sniffing & clean referrer policy)
 app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
