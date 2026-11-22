@@ -112,32 +112,6 @@ export const TikTokDeveloperPortalView: React.FC<TikTokDeveloperPortalViewProps>
       {/* Interactive Tool: Solve 'This URL is not verified. Verify URL properties' */}
       <TikTokUrlVerificationCard />
 
-      {/* Notice Explanation for Browser URL vs iFrame */}
-      <div className="p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs sm:text-sm space-y-2.5 shadow-sm shadow-black/20">
-        <div className="font-bold flex items-center gap-2 text-amber-950 text-sm">
-          <Info className="w-4 h-4 text-amber-400 shrink-0" />
-          <span>Pourquoi vous ne pouviez pas taper /terms ou /privacy dans votre navigateur ?</span>
-        </div>
-        <p className="leading-relaxed text-amber-300/90 text-xs sm:text-sm">
-          Dans Google AI Studio, l'application est encapsulée dans une fenêtre isolée (<strong>iFrame</strong>). Lorsque vous regardez la barre d'adresse tout en haut de votre écran, vous voyez l'adresse de Google AI Studio, pas celle de votre application. Si vous ajoutez <code>/terms</code> à cette adresse, vous quittez l'application.
-        </p>
-        <div className="pt-1 flex flex-wrap items-center gap-2 text-xs">
-          <span className="font-bold text-amber-950">Accès direct dans l'application :</span>
-          <button
-            onClick={onOpenTerms}
-            className="px-2.5 py-1 rounded-lg bg-amber-500/15 hover:bg-amber-200 font-bold text-amber-950 underline cursor-pointer"
-          >
-            Consulter les CGU (/terms)
-          </button>
-          <button
-            onClick={onOpenPrivacy}
-            className="px-2.5 py-1 rounded-lg bg-amber-500/15 hover:bg-amber-200 font-bold text-amber-950 underline cursor-pointer"
-          >
-            Consulter la Confidentialité (/privacy)
-          </button>
-        </div>
-      </div>
-
       {/* Section 1: Logo 1024x1024 */}
       <div className="bg-zinc-900/70 rounded-3xl p-6 sm:p-8 border border-zinc-800 shadow-sm shadow-black/20 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-800/70 pb-4">

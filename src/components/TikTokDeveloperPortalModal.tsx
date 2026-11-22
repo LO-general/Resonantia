@@ -106,20 +106,6 @@ export const TikTokDeveloperPortalModal: React.FC<TikTokDeveloperPortalModalProp
 
         {/* Scrollable Body */}
         <div className="p-5 sm:p-6 overflow-y-auto space-y-6 text-zinc-200 text-sm">
-          {/* Explanation Alert for iFrame / URL access */}
-          <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs sm:text-sm space-y-2">
-            <div className="font-bold flex items-center gap-2 text-amber-950">
-              <Info className="w-4 h-4 text-amber-400 shrink-0" />
-              <span>Pourquoi vous ne pouviez pas taper /terms dans votre navigateur ?</span>
-            </div>
-            <p className="leading-relaxed text-amber-300/90 text-xs">
-              L'application s'exécute dans un conteneur sécurisé (iFrame) au sein de Google AI Studio. La barre d'adresse tout en haut de votre navigateur appartient à la plateforme Google et non à l'application.
-            </p>
-            <p className="leading-relaxed text-amber-300/90 text-xs">
-              <strong>Solution :</strong> Vous pouvez consulter directement les CGU et la Politique de Confidentialité en cliquant sur les boutons <strong>« Lire dans l'app »</strong> ci-dessous, ou copier les URLs officielles pour les soumettre au portail TikTok !
-            </p>
-          </div>
-
           {/* TikTok URL Ownership Verification Tool ('Verify URL properties') */}
           <TikTokUrlVerificationCard />
 
