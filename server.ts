@@ -116,7 +116,7 @@ app.get(/\/tiktok[^/]*\.txt$/, (req, res) => {
     return res.send(normalizeVerificationContent(process.env.TIKTOK_VERIFICATION_TOKEN));
   }
 
-  return res.send('tiktok-developers-site-verification=L41nyiWgXKvgihTf9HLJPTog29cYMj1J');
+  return res.send('tiktok-developers-site-verification=SiydJBO7dOUt8TQ8PI4Fdn2SduXHlmQI');
 });
 
 // TikTok Verification Status and Save endpoints
@@ -139,7 +139,7 @@ app.get('/api/tiktok/verification-status', (req, res) => {
     content = normalizeVerificationContent(process.env.TIKTOK_VERIFICATION_TOKEN);
   }
   if (!content) {
-    content = 'tiktok-developers-site-verification=L41nyiWgXKvgihTf9HLJPTog29cYMj1J';
+    content = 'tiktok-developers-site-verification=SiydJBO7dOUt8TQ8PI4Fdn2SduXHlmQI';
   }
 
   res.json({
