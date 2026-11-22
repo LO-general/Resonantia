@@ -8,6 +8,10 @@
       "destination": "/api/index?__path=/api/:path*"
     },
     {
+      "source": "/tiktok(.*)\\.txt",
+      "destination": "/api/index?__path=/tiktok$1.txt"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

@@ -1844,7 +1844,7 @@ app.get(/\/tiktok[^/]*\.txt$/, (req, res) => {
   if (process.env.TIKTOK_VERIFICATION_TOKEN) {
     return res.send(normalizeVerificationContent(process.env.TIKTOK_VERIFICATION_TOKEN));
   }
-  return res.send("tiktok-developers-site-verification=SiydJBO7dOUt8TQ8PI4Fdn2SduXHlmQI");
+  return res.send("tiktok-developers-site-verification=5GZrrjWFz1rqs8tYMf8H3S8J2TzW94DM");
 });
 app.get("/api/tiktok/verification-status", (req, res) => {
   const candidatePaths = [
@@ -1864,7 +1864,7 @@ app.get("/api/tiktok/verification-status", (req, res) => {
     content = normalizeVerificationContent(process.env.TIKTOK_VERIFICATION_TOKEN);
   }
   if (!content) {
-    content = "tiktok-developers-site-verification=SiydJBO7dOUt8TQ8PI4Fdn2SduXHlmQI";
+    content = "tiktok-developers-site-verification=5GZrrjWFz1rqs8tYMf8H3S8J2TzW94DM";
   }
   res.json({
     isConfigured: Boolean(content),
