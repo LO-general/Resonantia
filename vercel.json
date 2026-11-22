@@ -5,15 +5,15 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/api"
+      "destination": "/api/index?__path=/api/$1"
     },
     {
-      "source": "/tiktok(.*)\\.txt",
-      "destination": "/api"
+      "source": "/(tiktok[^/]*\\.txt)",
+      "destination": "/api/index?__path=/$1"
     },
     {
-      "source": "/(.*)/tiktok(.*)\\.txt",
-      "destination": "/api"
+      "source": "/(.*)/(tiktok[^/]*\\.txt)",
+      "destination": "/api/index?__path=/$1/$2"
     },
     {
       "source": "/((?!api(?:/|$)).*)",

@@ -41,6 +41,22 @@ let inMemoryVerificationToken: string | null = null;
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 
+// Restore original path when routed through Vercel rewrites (?__path=/api/...)
+app.use((req, _res, next) => {
+  try {
+    const parsed = new URL(req.url || '/', 'http://localhost');
+    const rewrittenPath = parsed.searchParams.get('__path');
+    if (rewrittenPath && rewrittenPath.startsWith('/')) {
+      parsed.searchParams.delete('__path');
+      const qs = parsed.searchParams.toString();
+      req.url = qs ? `${rewrittenPath}?${qs}` : rewrittenPath;
+    }
+  } catch {
+    // keep original req.url
+  }
+  next();
+});
+
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ extended: true, limit: '100mb' }));
 
@@ -2084,6 +2100,13 @@ app.post('/api/pedagogical-videos/progress', (req, res) => {
   map[cleanUserId] = updatedProgress;
   writeJsonSecureFile(PEDAGOGICAL_PROGRESS_FILE, map);
   return res.json({ success: true, progress: updatedProgress });
+});
+
+// Clean JSON 404 for unmatched /api routes (prevents HTML 404 responses on API calls)
+app.all('/api/*', (req, res) => {
+  return res.status(404).json({
+    error: `Route API introuvable : ${req.method} ${req.url}`,
+  });
 });
 
 // Vite middleware in dev or static files in production
