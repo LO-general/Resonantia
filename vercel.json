@@ -4,19 +4,19 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "/api/index"
+      "source": "/api/(.*)",
+      "destination": "/api"
     },
     {
       "source": "/tiktok(.*)\\.txt",
-      "destination": "/api/index"
+      "destination": "/api"
     },
     {
       "source": "/(.*)/tiktok(.*)\\.txt",
-      "destination": "/api/index"
+      "destination": "/api"
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!api(?:/|$)).*)",
       "destination": "/index.html"
     }
   ]
