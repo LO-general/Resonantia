@@ -33,8 +33,10 @@ dotenv.config({ override: true });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const PROJECT_ROOT = path.basename(__dirname) === 'api' ? path.resolve(__dirname, '..') : __dirname;
 const IS_VERCEL = Boolean(process.env.VERCEL);
-const RUNTIME_WRITABLE_DIR = IS_VERCEL ? '/tmp' : __dirname;
+const RUNTIME_WRITABLE_DIR = IS_VERCEL ? '/tmp' : PROJECT_ROOT;
+let inMemoryVerificationToken: string | null = null;
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
@@ -58,23 +60,35 @@ function escapeHtml(value: string): string {
     .replace(/'/g, '&#39;');
 }
 
+function normalizeVerificationContent(raw: string): string {
+  const trimmed = raw.trim();
+  return trimmed.startsWith('tiktok-developers-site-verification=')
+    ? trimmed
+    : `tiktok-developers-site-verification=${trimmed}`;
+}
+
 // Serve public directory explicitly (guarantees logo-1024.png, logo-1024.jpg, and verification files return raw binaries/text)
-app.use(express.static(path.resolve(__dirname, 'public')));
+app.use(express.static(path.resolve(PROJECT_ROOT, 'public')));
 
 // TikTok Developer Ownership Verification File handler (matches root AND any URL prefix like /api/auth/tiktok*.txt or /terms/tiktok*.txt)
 app.get(/\/tiktok[^/]*\.txt$/, (req, res) => {
   const reqFileName = path.basename(req.path).replace(/[^a-zA-Z0-9._-]/g, '');
-  const candidatePaths = [
-    reqFileName ? path.resolve(RUNTIME_WRITABLE_DIR, reqFileName) : '',
-    path.resolve(RUNTIME_WRITABLE_DIR, 'tiktok-developers-site-verification.txt'),
-    reqFileName ? path.resolve(__dirname, 'public', reqFileName) : '',
-    path.resolve(__dirname, 'public', 'tiktok-developers-site-verification.txt'),
-    reqFileName ? path.resolve(__dirname, 'dist', reqFileName) : '',
-    path.resolve(__dirname, 'dist', 'tiktok-developers-site-verification.txt'),
-  ].filter(Boolean);
 
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+
+  if (inMemoryVerificationToken) {
+    return res.send(inMemoryVerificationToken);
+  }
+
+  const candidatePaths = [
+    reqFileName ? path.resolve(RUNTIME_WRITABLE_DIR, reqFileName) : '',
+    path.resolve(RUNTIME_WRITABLE_DIR, 'tiktok-developers-site-verification.txt'),
+    reqFileName ? path.resolve(PROJECT_ROOT, 'public', reqFileName) : '',
+    path.resolve(PROJECT_ROOT, 'public', 'tiktok-developers-site-verification.txt'),
+    reqFileName ? path.resolve(PROJECT_ROOT, 'dist', reqFileName) : '',
+    path.resolve(PROJECT_ROOT, 'dist', 'tiktok-developers-site-verification.txt'),
+  ].filter(Boolean);
 
   for (const candidate of candidatePaths) {
     if (fs.existsSync(candidate)) {
@@ -82,35 +96,39 @@ app.get(/\/tiktok[^/]*\.txt$/, (req, res) => {
     }
   }
 
-  return res.send(
-    process.env.TIKTOK_VERIFICATION_TOKEN ||
-      'tiktok-developers-site-verification=NdEl8xTGVSrLyPtfm5AvlhCBqQWWrIqW'
-  );
+  if (process.env.TIKTOK_VERIFICATION_TOKEN) {
+    return res.send(normalizeVerificationContent(process.env.TIKTOK_VERIFICATION_TOKEN));
+  }
+
+  return res.send('tiktok-developers-site-verification=NdEl8xTGVSrLyPtfm5AvlhCBqQWWrIqW');
 });
 
 // TikTok Verification Status and Save endpoints
 app.get('/api/tiktok/verification-status', (req, res) => {
   const candidatePaths = [
     path.resolve(RUNTIME_WRITABLE_DIR, 'tiktok-developers-site-verification.txt'),
-    path.resolve(__dirname, 'public', 'tiktok-developers-site-verification.txt'),
-    path.resolve(__dirname, 'dist', 'tiktok-developers-site-verification.txt'),
+    path.resolve(PROJECT_ROOT, 'public', 'tiktok-developers-site-verification.txt'),
+    path.resolve(PROJECT_ROOT, 'dist', 'tiktok-developers-site-verification.txt'),
   ];
   const existingPath = candidatePaths.find((p) => fs.existsSync(p));
-  let content: string | null = null;
-  if (existingPath) {
+  let content: string | null = inMemoryVerificationToken;
+  if (!content && existingPath) {
     try {
-      content = fs.readFileSync(existingPath, 'utf-8');
+      content = fs.readFileSync(existingPath, 'utf-8').trim();
     } catch {
       // ignore
     }
-  } else if (process.env.TIKTOK_VERIFICATION_TOKEN) {
-    content = process.env.TIKTOK_VERIFICATION_TOKEN;
-  } else {
+  }
+  if (!content && process.env.TIKTOK_VERIFICATION_TOKEN) {
+    content = normalizeVerificationContent(process.env.TIKTOK_VERIFICATION_TOKEN);
+  }
+  if (!content) {
     content = 'tiktok-developers-site-verification=NdEl8xTGVSrLyPtfm5AvlhCBqQWWrIqW';
   }
 
   res.json({
     isConfigured: Boolean(content),
+    isServerless: IS_VERCEL,
     fileName: 'tiktok-developers-site-verification.txt',
     content,
     url: '/tiktok-developers-site-verification.txt',
@@ -119,25 +137,21 @@ app.get('/api/tiktok/verification-status', (req, res) => {
 
 app.post('/api/tiktok/save-verification', (req, res) => {
   try {
-    const { token, fileName, content } = req.body;
+    const { token, fileName, content } = req.body || {};
     if (!token && !content) {
       return res.status(400).json({ error: 'Token ou contenu du fichier manquant.' });
     }
 
-    const writeDir = IS_VERCEL ? RUNTIME_WRITABLE_DIR : path.resolve(__dirname, 'public');
+    const writeDir = IS_VERCEL ? RUNTIME_WRITABLE_DIR : path.resolve(PROJECT_ROOT, 'public');
     if (!fs.existsSync(writeDir)) {
       fs.mkdirSync(writeDir, { recursive: true });
     }
 
     const targetFileName = (fileName || 'tiktok-developers-site-verification.txt').replace(/[^a-zA-Z0-9._-]/g, '');
-    let fileContent = content;
-    if (!fileContent && token) {
-      fileContent = token.trim().startsWith('tiktok-developers-site-verification=')
-        ? token.trim()
-        : `tiktok-developers-site-verification=${token.trim()}`;
-    }
+    const rawValue = String(content || token || '').trim();
+    const stdContent = normalizeVerificationContent(rawValue);
+    inMemoryVerificationToken = stdContent;
 
-    const stdContent = fileContent.trim();
     fs.writeFileSync(path.resolve(writeDir, targetFileName), stdContent, 'utf-8');
 
     // Always keep standard filename synchronized
@@ -153,10 +167,13 @@ app.post('/api/tiktok/save-verification', (req, res) => {
 
     return res.json({
       success: true,
+      isServerless: IS_VERCEL,
       fileName: targetFileName,
       fileUrl: `/${targetFileName}`,
       content: stdContent,
-      message: `Fichier ${targetFileName} enregistré avec succès. Le portail développeur peut désormais le vérifier.`,
+      message: IS_VERCEL
+        ? `Fichier ${targetFileName} activé ! Conseil Vercel : ajoute aussi la variable d’environnement TIKTOK_VERIFICATION_TOKEN="${stdContent}" dans Vercel → Settings → Environment Variables puis Redeploy pour qu’elle reste active en permanence sur tous les serveurs.`
+        : `Fichier ${targetFileName} enregistré avec succès. Le portail développeur peut désormais le vérifier.`,
     });
   } catch (error: any) {
     console.error('Error saving TikTok verification file:', error);

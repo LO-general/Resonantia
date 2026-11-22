@@ -91,19 +91,29 @@ export const TikTokUrlVerificationCard: React.FC = () => {
         }),
       });
 
-      const data = await res.json();
-      if (!res.ok || !data.success) {
-        throw new Error(data.error || "Erreur lors de l'enregistrement sur le serveur.");
+      const rawText = await res.text();
+      let data: any = null;
+      try {
+        data = rawText ? JSON.parse(rawText) : null;
+      } catch {
+        throw new Error(
+          `Réponse invalide du serveur (HTTP ${res.status}). Vérifiez que le backend API est bien déployé et à jour.`
+        );
+      }
+
+      if (!res.ok || !data?.success) {
+        throw new Error(data?.error || `Erreur serveur (HTTP ${res.status}) lors de l'enregistrement.`);
       }
 
       setSaveSuccess(
-        `✓ Fichier ${data.fileName} activé avec succès sur le serveur ! Vous pouvez maintenant cliquer sur 'Verify' dans TikTok.`
+        data.message ||
+          `✓ Fichier ${data.fileName} activé avec succès sur le serveur ! Vous pouvez maintenant cliquer sur 'Verify'.`
       );
       setTokenInput('');
       checkStatus();
       runLiveTest();
     } catch (err: any) {
-      setSaveError(err.message || 'Impossible de sauvegarder le fichier.');
+      setSaveError(err?.message || 'Impossible de sauvegarder le fichier.');
     } finally {
       setIsSaving(false);
     }
