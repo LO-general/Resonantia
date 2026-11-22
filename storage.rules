@@ -1,0 +1,32 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Default deny-all catch-all rule
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // User-isolated storage: users/{userId}/videos/...
+    match /users/{userId}/videos/{videoId} {
+      // User can read, download, and delete their own videos
+      allow read, delete: if isOwner(userId);
+
+      // User can upload their own videos: max 500MB, must be video MIME or octet-stream
+      allow write: if isOwner(userId)
+        && request.resource.size < 500 * 1024 * 1024
+        && (request.resource.contentType.matches('video/.*') 
+            || request.resource.contentType.matches('image/.*')
+            || request.resource.contentType == 'application/octet-stream');
+    }
+  }
+}

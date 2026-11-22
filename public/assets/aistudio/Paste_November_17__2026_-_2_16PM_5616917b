@@ -1,0 +1,912 @@
+# MISSION GLOBALE — CONSOLIDATION COMPLÈTE DE MON COACH TIKTOK ET PRÉPARATION À SON ÉVOLUTION
+
+Tu dois réaliser une consolidation approfondie de mon application actuelle.
+
+Il ne s'agit pas de créer une nouvelle application, de recommencer le projet à zéro ou d'ajouter simplement quelques éléments visuels.
+
+Je veux que tu examines l'intégralité du projet, que tu comprennes son architecture, que tu vérifies les fonctionnalités existantes, que tu corriges les problèmes et que tu consolides tous les modules pour obtenir un produit cohérent, fiable, intelligent et évolutif.
+
+Cette application a vocation à devenir, à terme, un véritable SaaS destiné à plusieurs créateurs TikTok. Cependant, la priorité actuelle est de consolider le produit existant avant d'entamer une transformation complète en SaaS.
+
+Je veux également éviter autant que possible les API payantes, les dépendances inutiles et les coûts récurrents.
+
+# PARTIE 1 — RÈGLES ABSOLUES AVANT TOUTE MODIFICATION
+
+## 1.1. Auditer avant de développer
+
+Commence par examiner l'intégralité du projet existant :
+
+- Architecture générale.
+- Organisation des fichiers et des dossiers.
+- Pages et composants.
+- Modules et fonctionnalités.
+- Base de données et stockage.
+- Connexion à TikTok.
+- API et endpoints utilisés.
+- Authentification.
+- Gestion des tokens.
+- Bibliothèques et dépendances.
+- Fonctions serveur.
+- Calculs statistiques.
+- Flux de données entre les modules.
+- Éventuelles fonctionnalités incomplètes ou défectueuses.
+
+Je veux un véritable audit technique et fonctionnel.
+
+Ne te contente pas d'observer les interfaces : examine le code et le fonctionnement réel.
+
+## 1.2. Préserver impérativement l'existant
+
+Certaines parties de l'application fonctionnent déjà et doivent être conservées.
+
+Règles obligatoires :
+
+- Ne reconstruis pas l'application.
+- Ne supprime pas les fonctionnalités opérationnelles.
+- Ne remplace pas une architecture fonctionnelle sans raison technique démontrée.
+- Ne supprime aucune donnée existante.
+- Ne casse pas les connexions TikTok.
+- Ne modifie pas les deux premières pages de l'onboarding.
+- Ne modifie pas le fonctionnement de l'importation des vidéos qui a déjà été corrigé.
+- Ne modifie pas le module Mon Visionnaire TikTok.
+- Ne supprime pas les modules existants simplement parce qu'ils semblent secondaires.
+- Préserve l'identité visuelle actuelle.
+- Préserve les fonctionnalités déjà opérationnelles.
+
+Avant toute modification importante, identifie les composants concernés et leurs dépendances.
+
+Si une modification présente un risque, explique-le et privilégie une solution compatible avec l'existant.
+
+## 1.3. Architecture d'intelligence : exactement deux couches
+
+Je veux conserver strictement cette architecture :
+
+**COUCHE 1 — MOTEUR STATISTIQUE**
+
+Il collecte, structure, stocke, calcule, compare et détecte les phénomènes observables à partir des données réelles.
+
+**COUCHE 2 — MOTEUR STRATÉGIQUE**
+
+Il interprète les résultats du moteur statistique, explique les observations, identifie les possibilités d'amélioration et propose des stratégies concrètes à partir de règles documentées.
+
+Aucune troisième couche d'IA générative ne doit être ajoutée.
+
+Ne rends pas l'application dépendante de Gemini, OpenAI, Claude ou d'une autre API d'IA payante pour effectuer les analyses quotidiennes.
+
+Les calculs, diagnostics, remarques, comparaisons et recommandations doivent fonctionner avec du code déterministe, des statistiques et des règles explicites.
+
+Google AI Studio reste un environnement de développement. Il ne doit pas devenir une dépendance obligatoire du produit déployé.
+
+---
+
+# PARTIE 2 — CONSOLIDATION DU SYSTÈME DE DONNÉES
+
+C'est la priorité technique.
+
+Les différents modules doivent travailler sur une source de données cohérente.
+
+Je ne veux pas que TikTok Analytics, Mon Coach TikTok et les autres modules calculent chacun leurs statistiques de manière indépendante.
+
+## 2.1. Centraliser les données
+
+Créer ou consolider une structure centrale permettant de gérer :
+
+- Les comptes TikTok connectés.
+- Les publications.
+- Les identifiants des vidéos.
+- Les dates et heures de publication.
+- Les durées.
+- Les descriptions.
+- Les hashtags.
+- Les musiques et sons.
+- Les vues.
+- Les likes.
+- Les commentaires.
+- Les partages.
+- Les favoris lorsque disponibles.
+- Les abonnés globaux du compte.
+- Les données d'attribution des abonnés lorsqu'elles existent réellement.
+- Les informations éditoriales renseignées manuellement.
+- Les relevés historiques.
+- Les expériences réalisées.
+- Les informations relatives aux droits des contenus.
+
+Chaque donnée doit posséder une provenance identifiable :
+
+1. API TikTok.
+2. Saisie manuelle.
+3. Importation.
+4. Calcul interne.
+
+Conserver également les dates de collecte et les informations nécessaires pour vérifier la fiabilité des données.
+
+## 2.2. Gérer correctement les valeurs indisponibles
+
+Règle fondamentale :
+
+Une donnée indisponible n'est pas égale à zéro.
+
+Ne jamais remplacer artificiellement une donnée absente par 0.
+
+Distinguer :
+- Valeur réellement égale à zéro.
+- Valeur inconnue.
+- Valeur non fournie par TikTok.
+- Valeur non encore collectée.
+- Valeur saisie manuellement.
+- Valeur estimée, si une estimation est réellement justifiée et explicitement identifiée.
+
+Les statistiques doivent être traçables et vérifiables.
+
+## 2.3. Créer un système de snapshots
+
+Mettre en place un historique des performances.
+
+À chaque collecte, enregistrer les compteurs réels avec leur date et leur heure.
+
+Exemple :
+
+| Moment | Vues cumulées | Nouvelles vues |
+|---|---:|---:|
+| 1 heure | 1 000 | 1 000 |
+| 5 heures | 1 450 | +450 |
+| 24 heures | 1 600 | +150 |
+| 48 heures | 1 602 | +2 |
+
+Ces données sont illustratives.
+
+Le système doit distinguer :
+- Le nombre total de vues à chaque relevé.
+- Le nombre de nouvelles vues depuis le relevé précédent.
+- La vitesse de progression.
+- Les périodes d'accélération.
+- Les périodes de stagnation.
+- Les éventuelles reprises de croissance.
+
+Ne jamais reconstruire artificiellement des points historiques qui n'ont pas été collectés.
+
+Si TikTok corrige un compteur, conserver une trace de cette correction plutôt que de supprimer silencieusement l'ancien relevé.
+
+---
+
+# PARTIE 3 — CONSOLIDATION DE TIKTOK ANALYTICS
+
+TikTok Analytics doit être la source de référence pour la consultation des données factuelles.
+
+Il doit présenter les performances réelles, sans interprétation stratégique excessive.
+
+## 3.1. Statistiques par vidéo
+
+Afficher :
+- Nombre de vues.
+- Nombre de likes.
+- Nombre de commentaires.
+- Nombre de partages.
+- Nombre de favoris si disponible.
+- Date et heure de publication.
+- Durée.
+- Informations sur la musique.
+- Hashtags.
+- Autres métadonnées disponibles.
+
+Ajouter les ratios suivants :
+
+- Taux de likes = likes / vues × 100.
+- Taux de commentaires = commentaires / vues × 100.
+- Taux de partages = partages / vues × 100.
+- Taux d'engagement = (likes + commentaires + partages) / vues × 100.
+
+Les favoris peuvent être inclus dans un indicateur complémentaire si leur définition est clairement indiquée.
+
+Afficher les formules et les méthodes de calcul.
+
+Distinguer le taux calculé sur l'ensemble des interactions et vues d'une période de la moyenne des taux calculés vidéo par vidéo.
+
+## 3.2. Graphiques temporels
+
+Les graphiques doivent utiliser les véritables données collectées.
+
+Pour les trajectoires de vues :
+- Axe horizontal : temps.
+- Axe vertical : vues cumulées.
+- Points correspondant aux snapshots.
+- Dates et heures exactes.
+- Tableau détaillé sous le graphique.
+
+Ne pas afficher de courbes fictives ou de points interpolés présentés comme des observations réelles.
+
+## 3.3. Comparaison des publications
+
+Permettre de comparer les vidéos selon :
+- Le nombre de vues.
+- Les taux d'interaction.
+- Les performances par catégorie.
+- Les musiques.
+- Les hashtags.
+- Les jours et horaires.
+- Les caractéristiques éditoriales.
+- Les trajectoires temporelles.
+
+Les classements doivent être explicites.
+
+Exemple : « Nombre de vues : du plus élevé au plus faible ».
+
+---
+
+# PARTIE 4 — CONSOLIDATION DE MON COACH TIKTOK
+
+Le Coach est le cœur stratégique du produit.
+
+Il ne doit pas être un simple générateur de conseils génériques.
+
+Il doit comprendre les performances du compte et apprendre progressivement de son historique.
+
+## 4.1. Détection des paliers de vues
+
+Je veux une analyse de l'évolution du niveau habituel de mes publications.
+
+Exemple de mon propre compte :
+
+- Ancien niveau de performance : environ 700 vues.
+- Nouveau niveau de performance : environ 1 200 à 1 300 vues.
+
+Le Coach doit pouvoir détecter ce genre d'évolution.
+
+Il doit :
+- Calculer la moyenne des vues.
+- Calculer la médiane.
+- Mesurer la dispersion.
+- Identifier les publications exceptionnelles.
+- Détecter les progressions durables.
+- Identifier les périodes de stagnation.
+- Comparer différentes périodes.
+- Éviter de considérer une seule vidéo virale comme une progression durable.
+
+La médiane doit être particulièrement importante pour éviter que quelques vidéos exceptionnelles faussent l'interprétation.
+
+## 4.2. Section « Comment passer au niveau supérieur ? »
+
+Le Coach doit analyser les vidéos qui dépassent régulièrement le niveau habituel du compte.
+
+Il doit rechercher les différences observables :
+- Sujet.
+- Angle de traitement.
+- Hashtags.
+- Musique.
+- Durée.
+- Structure.
+- Accroche.
+- Texte à l'écran.
+- Rythme.
+- Émotion.
+- Narration.
+- Jour et heure de publication.
+- Performances.
+- Trajectoires.
+
+Les caractéristiques éditoriales qui ne sont pas accessibles par l'API doivent pouvoir être renseignées manuellement.
+
+Le Coach doit ensuite proposer des expérimentations précises et mesurer leurs résultats.
+
+Ne jamais présenter une corrélation comme une preuve de causalité.
+
+## 4.3. Nouvelle rubrique « Remarque intéressante »
+
+Créer une rubrique portant exactement ce nom :
+
+**« Remarque intéressante »**
+
+Cette rubrique doit détecter des phénomènes statistiques auxquels je n'aurais pas forcément pensé.
+
+Exemples :
+
+- Une vidéo a beaucoup de vues, mais peu de likes.
+- Une vidéo génère beaucoup de commentaires.
+- Une vidéo obtient beaucoup de partages.
+- Une vidéo a peu de vues mais un fort taux d'interaction.
+- Une vidéo attire beaucoup de spectateurs mais peu d'abonnés.
+- Une vidéo a moins de vues que d'habitude, mais un intérêt particulièrement élevé auprès de ceux qui la regardent.
+- Une catégorie de publications dépasse régulièrement les autres.
+
+Le Coach doit comprendre qu'une vidéo peut être intéressante même si elle n'obtient pas beaucoup de likes.
+
+Par exemple, une vidéo à 20 000 vues peut représenter une excellente occasion de faire découvrir mon compte à une nouvelle audience.
+
+Les vues créent des possibilités de découverte. Les interactions montrent d'autres formes d'intérêt. Les abonnements permettent de mesurer la conversion lorsque l'attribution est disponible.
+
+Ne pas confondre vues et spectateurs uniques.
+
+Ne pas affirmer qu'une vidéo a généré des abonnés si cette attribution n'est pas connue.
+
+Chaque remarque doit présenter :
+1. Le fait observé.
+2. La comparaison avec l'historique.
+3. Pourquoi c'est intéressant.
+4. Ce que cela signifie potentiellement.
+5. Une piste d'expérimentation.
+
+Ne pas inventer de remarques lorsque les données sont insuffisantes.
+
+## 4.4. Analyse des abonnés générés par vidéo
+
+Prévoir une statistique intitulée :
+
+**« Nouveaux abonnés générés »**
+
+Avant de la développer, vérifier les champs réellement disponibles dans l'API TikTok.
+
+Distinguer impérativement :
+- Abonnés directement attribués à une vidéo par TikTok.
+- Données saisies manuellement.
+- Évolution globale du nombre d'abonnés du compte.
+
+Ne jamais transformer une croissance globale en attribution individuelle.
+
+Si l'attribution par vidéo n'est pas disponible, afficher clairement cette limite.
+
+Lorsque des données fiables sont disponibles, calculer :
+
+Taux de conversion en abonnés = abonnés attribués à la vidéo / vues × 100.
+
+Le Coach doit comparer les vidéos qui génèrent beaucoup de vues à celles qui convertissent le mieux en abonnés.
+
+## 4.5. Stratégies d'engagement
+
+Le Coach doit analyser séparément :
+- La portée.
+- Les likes.
+- Les commentaires.
+- Les partages.
+- Les favoris.
+- Les abonnements attribués.
+
+Il doit expliquer les différences entre ces dimensions et proposer des stratégies adaptées.
+
+Ne pas considérer automatiquement qu'un taux de likes faible signifie que la publication est mauvaise.
+
+Ne pas utiliser de seuils universels arbitraires.
+
+## 4.6. Expérimentations et apprentissage
+
+Créer un suivi des expériences :
+
+- Hypothèse.
+- Caractéristique modifiée.
+- Publications concernées.
+- Objectif.
+- Résultats mesurés.
+- Comparaison avec la situation de référence.
+- Conclusion.
+
+Les conclusions possibles :
+- Prometteur.
+- Défavorable.
+- Inconclusif.
+- Données insuffisantes.
+
+Le Coach doit conserver les enseignements acquis pour éviter de recommander constamment les mêmes expériences.
+
+---
+
+# PARTIE 5 — MODES DE CONTENU : CRÉATION ET REPOST
+
+Je souhaite que l'application s'adapte au type de contenu que publie chaque utilisateur.
+
+## 5.1. Ajouter un choix à l'inscription
+
+Après les deux premières pages actuelles de l'onboarding, ajouter une nouvelle étape.
+
+Question :
+
+**« Quel type de contenu souhaites-tu publier sur TikTok ? »**
+
+Présenter trois possibilités :
+
+### Création de contenu
+
+« Je crée mes propres vidéos, montages, histoires et publications originales. »
+
+### Repost de contenu
+
+« Je souhaite repartager ou republier des contenus créés par d'autres personnes, dans le respect de leurs droits. »
+
+### Les deux
+
+« Je publie du contenu original et je réalise également des reposts. »
+
+Le choix doit être modifiable dans les paramètres.
+
+Ne pas modifier les deux premières pages existantes.
+
+## 5.2. Adapter le Coach
+
+Si l'utilisateur choisit création :
+- Conseils de création originale.
+- Analyse éditoriale.
+- Progression.
+- Musiques.
+- Expérimentations.
+
+Si l'utilisateur choisit repost :
+- Gestion des sources.
+- Vérification des autorisations.
+- Conditions de réutilisation.
+- Fonctionnalités natives TikTok.
+- Règles de publication.
+- Risques de restrictions.
+
+S'il choisit les deux, conserver deux catégories distinctes.
+
+Ne pas mélanger les performances des créations et des reposts sans pouvoir les distinguer.
+
+---
+
+# PARTIE 6 — MON REPOST : DROITS ET PROTECTION DU COMPTE
+
+Créer ou consolider le parcours consacré au repost.
+
+## 6.1. Principe fondamental
+
+Tout repost d'un contenu appartenant à un tiers doit nécessiter une autorisation ou une licence valable couvrant l'utilisation envisagée, sauf exception légale applicable.
+
+Le crédit du créateur ne remplace pas l'autorisation.
+
+Le fait de télécharger une vidéo publiquement accessible ne donne pas le droit de la republier.
+
+Modifier une vidéo, ajouter un texte, changer la musique ou recadrer l'image ne donne pas automatiquement le droit de l'utiliser.
+
+## 6.2. Gestion des droits
+
+Créer une fiche pour chaque contenu envisagé en repost :
+
+- Créateur original.
+- Source.
+- URL d'origine.
+- Type de contenu.
+- Autorisation obtenue.
+- Date de l'autorisation.
+- Conditions d'utilisation.
+- Autorisation de modification.
+- Autorisation d'utilisation commerciale si nécessaire.
+- Preuve de l'autorisation.
+
+Ne jamais déclarer les droits validés sans justification suffisante.
+
+## 6.3. Pratiques recommandées
+
+Expliquer :
+- Le repartage natif TikTok.
+- Duet.
+- Stitch.
+- Les autorisations écrites.
+- Les licences de réutilisation.
+- La conservation des preuves.
+- La nécessité de vérifier les droits des musiques et des autres éléments incorporés.
+
+Ne pas proposer de techniques pour contourner la détection de TikTok.
+
+Ne pas conseiller de masquer les filigranes ou de transformer superficiellement une vidéo pour éviter une détection.
+
+## 6.4. Analyse des performances
+
+Comparer séparément les performances des créations et des reposts.
+
+Identifier les différences de portée, d'interaction et de conversion lorsqu'elles sont mesurables.
+
+Ne pas supposer que le repost ou la création originale est systématiquement plus performant.
+
+---
+
+# PARTIE 7 — CONSEILLER MUSICAL
+
+Je veux un véritable conseiller musical intégré au Coach.
+
+La musique est un élément émotionnel et stratégique de mes publications.
+
+Il ne doit pas uniquement proposer les sons populaires du moment.
+
+Il doit comprendre :
+- Le sujet de la publication.
+- La catégorie.
+- L'émotion recherchée.
+- L'ambiance.
+- Le rythme souhaité.
+- Le type de séquence.
+- Les performances historiques des sons utilisés, lorsque disponibles.
+
+Ambiances possibles :
+- Épique.
+- Cinématographique.
+- Nostalgique.
+- Mélancolique.
+- Inspirante.
+- Énergique.
+- Apaisante.
+- Émotionnelle.
+
+Pour chaque recommandation, fournir :
+- Titre.
+- Artiste.
+- Ambiance.
+- Justification.
+- Type de séquence.
+- Éventuelles données de performance issues de l'historique.
+
+Construire progressivement un catalogue musical interne, importable et actualisable sans API payante obligatoire.
+
+Vérifier autant que possible la disponibilité dans TikTok et les droits selon le territoire, le type de compte et l'utilisation prévue.
+
+Ne pas garantir qu'un son augmentera la portée.
+
+Ne pas inventer les tendances musicales.
+
+---
+
+# PARTIE 8 — « COMPRENDRE TIKTOK » : CENTRE PÉDAGOGIQUE
+
+Cette rubrique doit permettre à l'utilisateur de comprendre réellement TikTok.
+
+Elle ne doit pas être une simple FAQ statique.
+
+Elle doit relier les connaissances générales aux observations réelles de son compte.
+
+## 8.1. Fonctionnement de TikTok
+
+Expliquer notamment :
+- Les mécanismes de recommandation documentés.
+- Le rôle des interactions.
+- Le rôle du temps de visionnage lorsque la donnée est disponible.
+- L'importance des caractéristiques du contenu.
+- Les signaux de découverte.
+- Les différences entre portée, vues et spectateurs uniques.
+- Les limites de ce que l'on peut réellement connaître de l'algorithme.
+
+Distinguer systématiquement :
+- Faits officiels.
+- Observations statistiques.
+- Hypothèses.
+- Informations inconnues.
+
+## 8.2. Protection de la visibilité
+
+Créer une rubrique :
+
+**« Publier sans risquer de restrictions évitables »**
+
+Expliquer les différences entre :
+1. Contenu conforme et éligible au fil Pour toi.
+2. Contenu autorisé mais non éligible aux recommandations.
+3. Contenu supprimé.
+4. Restriction du compte.
+5. Restriction dans les résultats de recherche.
+
+Enseigner les principales catégories de règles :
+- Violence et contenus dangereux.
+- Harcèlement et discours haineux.
+- Contenus sexuels et nudité.
+- Protection des mineurs.
+- Désinformation.
+- Droits d'auteur.
+- Musiques et contenus tiers.
+- Transparence commerciale.
+- Contenus répétitifs, non originaux ou de faible qualité.
+- Contenus sensibles.
+
+## 8.3. Checklist avant publication
+
+Créer une checklist permettant de vérifier :
+- Conformité générale.
+- Droits sur les images et vidéos.
+- Droits sur les musiques.
+- Originalité du contenu.
+- Informations potentiellement trompeuses.
+- Déclarations commerciales nécessaires.
+
+La checklist réduit les risques mais ne garantit jamais l'absence de restriction.
+
+## 8.4. Comprendre les sanctions
+
+Expliquer comment consulter :
+- L'état du compte.
+- Les violations.
+- Les notifications.
+- Les contenus non éligibles au fil Pour toi.
+- Les motifs communiqués.
+- Les possibilités de contestation.
+
+Ne jamais conclure à un shadowban sur la seule base d'une baisse des vues.
+
+Utiliser les sources officielles TikTok, avec des liens, une date de vérification et une possibilité de mise à jour.
+
+---
+
+# PARTIE 9 — CONSOLIDATION DES AUTRES MODULES
+
+Auditer les autres modules existants et leur cohérence.
+
+## 9.1. Mon Visionnaire TikTok
+
+Ce module doit rester indépendant.
+
+Ne pas le modifier, ne pas supprimer ses fonctions et ne pas lui donner automatiquement accès aux brouillons TikTok.
+
+L'utilisateur doit continuer à lui fournir lui-même les vidéos qu'il souhaite analyser.
+
+Préserver ses fonctionnalités existantes, notamment l'importation et l'analyse des vidéos.
+
+## 9.2. Agenda et planification
+
+Conserver un agenda lisible.
+
+Ne présenter que les jours et créneaux pour lesquels les données justifient une recommandation.
+
+Ne pas remplir artificiellement les sept jours de la semaine.
+
+Distinguer :
+- Créneaux recommandés.
+- Publications planifiées.
+- Publications déjà réalisées.
+
+Afficher les dates, heures, justifications et niveaux de fiabilité lorsque disponibles.
+
+## 9.3. Compréhension et pédagogie
+
+Les explications du Coach doivent être précises et reliées aux données.
+
+Éviter les conseils génériques tels que « publie régulièrement » sans justification.
+
+Chaque recommandation doit expliquer son intérêt pour le compte.
+
+---
+
+# PARTIE 10 — AUDIT ET NETTOYAGE DES INTÉGRATIONS
+
+Je veux que tu examines toutes les applications, services, bibliothèques, connecteurs et dépendances utilisés dans ce projet.
+
+Pour chacun :
+- Nom.
+- Utilité.
+- Fonctionnalités dépendantes.
+- Coût éventuel.
+- Fréquence d'utilisation.
+- Caractère indispensable ou facultatif.
+
+Identifier les services :
+- Inutilisés.
+- Redondants.
+- Payants alors qu'une alternative gratuite fiable existe.
+- Nécessaires au fonctionnement.
+- Nécessaires uniquement à certaines fonctionnalités.
+
+Ne supprime rien avant d'avoir identifié les dépendances.
+
+Conserve les éléments indispensables.
+
+Supprime ou désactive uniquement les éléments inutilisés dont l'absence ne casse aucune fonctionnalité.
+
+Je souhaite limiter au maximum les frais récurrents.
+
+Prioriser :
+- Les calculs internes.
+- Les bibliothèques open source.
+- Les bases de données avec des offres gratuites adaptées.
+- Les sources officielles accessibles.
+- Les importations manuelles.
+- Les traitements déterministes.
+
+Ne remplace pas un service par une solution gratuite qui serait moins fiable ou contraire aux conditions d'utilisation.
+
+Ne crée pas de dépendance obligatoire à une API payante pour le fonctionnement du Coach.
+
+---
+
+# PARTIE 11 — AUDIT COMPLET DE SÉCURITÉ
+
+C'est une exigence absolue.
+
+Je ne veux aucune clé API privée, aucun token ou aucun secret directement visible dans le code client.
+
+## 11.1. Recherche des secrets
+
+Inspecter :
+- JavaScript.
+- TypeScript.
+- HTML.
+- JSON.
+- Fichiers de configuration.
+- Scripts serveur.
+- Fichiers de build.
+- Journaux.
+- Dépôts Git.
+- Variables d'environnement.
+- URL contenant des paramètres sensibles.
+
+Rechercher :
+- Clés API.
+- Tokens OAuth.
+- Refresh tokens.
+- Secrets client.
+- Mots de passe.
+- Clés privées.
+- Identifiants confidentiels.
+
+## 11.2. Sécurisation
+
+Les secrets doivent être stockés dans un environnement sécurisé côté serveur.
+
+Les clés privées ne doivent jamais être exposées dans le navigateur.
+
+Attention aux variables préfixées VITE_, NEXT_PUBLIC_ ou équivalentes : elles ne doivent pas contenir de secrets privés.
+
+Les appels nécessitant une clé secrète doivent être réalisés côté serveur.
+
+Protéger les tokens TikTok :
+- Stockage sécurisé.
+- Renouvellement.
+- Expiration.
+- Révocation.
+- Absence dans les journaux.
+- Absence dans les réponses client.
+
+## 11.3. Vérification
+
+Inspecter également les fichiers compilés et les bundles distribués.
+
+Si un secret a déjà été exposé, signaler le risque et recommander sa rotation ou sa révocation.
+
+Ne pas se contenter de déplacer une clé dans un fichier .env si ce fichier est exposé au navigateur.
+
+Fournir un rapport de sécurité sans jamais afficher les valeurs des secrets.
+
+---
+
+# PARTIE 12 — PRÉPARER L'APPLICATION À DEVENIR UN SAAS
+
+Je ne demande pas de transformer immédiatement toute l'application en SaaS.
+
+Je souhaite toutefois que la consolidation prépare cette évolution.
+
+Identifier les changements nécessaires pour permettre ultérieurement :
+- Plusieurs utilisateurs.
+- Des comptes TikTok indépendants.
+- Des données isolées.
+- Des espaces personnels.
+- Des abonnements.
+- Des quotas d'utilisation.
+- Des paramètres propres à chaque utilisateur.
+- Des droits d'accès.
+- Une gestion des données personnelles.
+
+Si l'application utilise actuellement des données locales, identifier les limites de cette architecture.
+
+Préparer une structure compatible avec une future base de données centralisée.
+
+Ne migre pas toutes les données et ne remplace pas le système de stockage sans audit et plan de migration validé.
+
+Ne pas intégrer Stripe ou un système de paiement à ce stade.
+
+Le but est de préparer le terrain sans créer de coûts prématurés.
+
+---
+
+# PARTIE 13 — QUALITÉ, TESTS ET VALIDATION
+
+Je veux une véritable vérification fonctionnelle.
+
+Tester notamment :
+
+1. Connexion TikTok.
+2. Récupération des vidéos.
+3. Importation des vidéos.
+4. Affichage des statistiques.
+5. Calcul des ratios.
+6. Stockage des snapshots.
+7. Graphiques temporels.
+8. Comparaison des vidéos.
+9. Détection des paliers.
+10. Remarques intéressantes.
+11. Attribution des abonnés si disponible.
+12. Conseiller musical.
+13. Parcours création.
+14. Parcours repost.
+15. Checklist des droits.
+16. Protection de la visibilité.
+17. Agenda.
+18. Mon Visionnaire TikTok sans modification.
+19. Sécurité des secrets.
+20. Isolation des données lorsque plusieurs utilisateurs sont pris en charge.
+
+Vérifier qu'une fonctionnalité ne casse pas les autres.
+
+Créer des tests pour les calculs statistiques, notamment les valeurs manquantes, les divisions par zéro, les petits échantillons et les corrections de compteurs.
+
+Ne prétends pas qu'une fonctionnalité fonctionne si elle n'a pas été testée.
+
+Si un accès TikTok ou une permission manque, indique précisément ce qui n'a pas pu être testé.
+
+---
+
+# PARTIE 14 — MÉTHODE DE TRAVAIL OBLIGATOIRE
+
+Je ne veux pas que tu modifies tout le projet en une seule opération risquée.
+
+Procède par étapes.
+
+## PHASE 1 — AUDIT
+
+Produis un état des lieux complet :
+- Ce qui fonctionne.
+- Ce qui ne fonctionne pas.
+- Ce qui est incomplet.
+- Ce qui est redondant.
+- Ce qui manque.
+- Les risques techniques.
+- Les dépendances.
+- Les limites de l'API TikTok.
+- Les coûts potentiels.
+
+Ne commence pas les suppressions pendant cette phase.
+
+## PHASE 2 — PLAN DE CONSOLIDATION
+
+Présente les corrections et les développements dans un ordre logique.
+
+Pour chaque intervention :
+- Fichiers concernés.
+- Fonctionnalité concernée.
+- Dépendances.
+- Risque.
+- Résultat attendu.
+- Tests nécessaires.
+
+## PHASE 3 — CORRECTIONS PRIORITAIRES
+
+Commence par les problèmes qui affectent la fiabilité des données, des connexions, des calculs et de la sécurité.
+
+Ne développe pas de nouvelles interfaces si les données sous-jacentes sont encore incorrectes.
+
+## PHASE 4 — CONSOLIDATION FONCTIONNELLE
+
+Intègre les fonctionnalités définies dans ce document sans créer de doublons.
+
+Réutilise les composants et les systèmes déjà présents lorsqu'ils sont fiables.
+
+## PHASE 5 — NETTOYAGE
+
+Après vérification des dépendances, supprime uniquement les éléments inutilisés.
+
+## PHASE 6 — TESTS
+
+Teste les modules individuellement puis ensemble.
+
+## PHASE 7 — COMPTE RENDU
+
+Fournis un bilan final indiquant :
+
+- Les éléments conservés.
+- Les problèmes corrigés.
+- Les fonctionnalités développées.
+- Les fonctionnalités encore incomplètes.
+- Les limites de TikTok.
+- Les dépendances supprimées.
+- Les dépendances conservées.
+- Les secrets sécurisés.
+- Les éventuels secrets à renouveler.
+- Les tests réalisés.
+- Les tests non réalisables.
+- Les coûts récurrents restants.
+- Les prochaines étapes nécessaires à la transformation SaaS.
+
+# OBJECTIF FINAL
+
+Je veux obtenir une application cohérente, fiable et techniquement propre.
+
+Mon Coach TikTok doit être capable de comprendre les performances d'un compte, de découvrir des observations intéressantes, d'expliquer les mécanismes de progression, de proposer des stratégies mesurables et d'apprendre progressivement de l'historique de chaque utilisateur.
+
+Je veux également que les modes création et repost soient correctement pris en charge, que les droits des créateurs soient respectés et que les risques de restriction soient expliqués.
+
+Le projet doit être aussi autonome que possible, sans API d'IA générative payante obligatoire, sans dépendances superflues et sans secrets exposés.
+
+Enfin, cette consolidation doit constituer une base solide pour faire évoluer ultérieurement l'application vers un véritable SaaS multi-utilisateur.
+
+**La priorité n'est pas d'avoir le plus grand nombre de fonctionnalités. La priorité est que chaque fonctionnalité soit réellement opérationnelle, cohérente avec les autres, fiable et utile.**

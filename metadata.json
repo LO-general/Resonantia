@@ -1,0 +1,8 @@
+{
+  "name": "TikTok Content Manager",
+  "description": "Plateforme moderne de gestion de contenu TikTok avec deux agents IA : Content Creator (analyse vidéo & génération de légendes) et Repost Manager (bibliothèque & programmation de reposts).",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
